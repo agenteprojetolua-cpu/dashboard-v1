@@ -1,0 +1,896 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* NOVA PALETA - Preto/Cinza/Branco */
+  --primary-color: #1a1a1a;
+  --primary-dark: #000000;
+  --primary-light: #2d2d2d;
+  --secondary-color: #3b82f6;
+  --success-color: #10b981;
+  --error-color: #ef4444;
+  --background: #f9fafb;
+  --card-background: #ffffff;
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --border-color: #e5e7eb;
+  --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: var(--background);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Container Principal */
+.login-container {
+  width: 100%;
+  max-width: 450px;
+  padding: 20px;
+  position: relative;
+  z-index: 10;
+}
+
+/* Card de Login */
+.login-card {
+  background: var(--card-background);
+  border-radius: 20px;
+  padding: 48px 40px;
+  box-shadow: var(--shadow);
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Logo */
+.login-logo {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.login-logo img {
+  max-width: 160px;                
+  height: auto;
+  display: inline-block;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.10));
+  border-radius: 0;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.logo-symbol img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 20px;
+}
+
+.logo-symbol-text {
+  font-size: 42px;
+  font-weight: 800;
+  color: white;
+  text-transform: uppercase;
+}
+
+.login-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.login-subtitle {
+  font-size: 16px;
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+/* Formulário */
+.login-form {
+  margin-bottom: 24px;
+}
+
+.form-group {
+  margin-bottom: 24px;
+}
+
+.form-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.input-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--primary-color);
+}
+
+.form-input {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 15px;
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  outline: none;
+  transition: all 0.3s ease;
+  background: var(--background);
+  color: var(--text-primary);
+}
+
+.form-input:focus {
+  border-color: var(--primary-color);
+  background: white;
+  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
+}
+
+.form-input::placeholder {
+  color: #9ca3af;
+}
+
+/* Mensagem de Erro */
+.error-message {
+  display: none;
+  padding: 12px 16px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  color: var(--error-color);
+  font-size: 14px;
+  margin-bottom: 20px;
+  animation: shake 0.5s ease;
+}
+
+.error-message.show {
+  display: block;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+/* Botão de Login */
+.btn-login {
+  width: 100%;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-login:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+}
+
+.btn-login:active {
+  transform: translateY(0);
+}
+
+.btn-login:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Loader */
+.loader {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Footer */
+.login-footer {
+  text-align: center;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-color);
+}
+
+.login-footer p {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* Decoração de Fundo */
+.background-decoration {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.03), rgba(45, 45, 45, 0.05));
+  animation: float 20s ease-in-out infinite;
+}
+
+.circle-1 {
+  width: 300px;
+  height: 300px;
+  top: -150px;
+  right: -150px;
+  animation-delay: 0s;
+}
+
+.circle-2 {
+  width: 200px;
+  height: 200px;
+  bottom: -100px;
+  left: -100px;
+  animation-delay: 2s;
+}
+
+.circle-3 {
+  width: 150px;
+  height: 150px;
+  top: 50%;
+  left: -75px;
+  animation-delay: 4s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  33% {
+    transform: translate(30px, -30px) rotate(120deg);
+  }
+  66% {
+    transform: translate(-20px, 20px) rotate(240deg);
+  }
+}
+
+/* Animação de sucesso */
+@keyframes successPulse {
+  0%, 100% {
+    background: linear-gradient(135deg, var(--success-color), #059669);
+  }
+  50% {
+    background: linear-gradient(135deg, #059669, var(--success-color));
+  }
+}
+
+.btn-login.success {
+  animation: successPulse 0.5s ease;
+}
+
+/* ==========================================
+   RESPONSIVIDADE MELHORADA
+   ========================================== */
+
+/* Tablets e telas médias (até 768px) */
+@media (max-width: 768px) {
+  .login-container {
+    max-width: 420px;
+    padding: 16px;
+  }
+
+  .login-card {
+    padding: 40px 32px;
+    border-radius: 18px;
+  }
+
+  .login-logo img {
+    max-width: 140px;
+  }
+
+  .login-title {
+    font-size: 26px;
+  }
+
+  .login-subtitle {
+    font-size: 15px;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-label {
+    font-size: 13px;
+  }
+
+  .input-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .form-input {
+    padding: 13px 15px;
+    font-size: 14px;
+  }
+
+  .btn-login {
+    padding: 15px;
+    font-size: 15px;
+  }
+
+  .error-message {
+    padding: 11px 14px;
+    font-size: 13px;
+  }
+
+  .login-footer p {
+    font-size: 12px;
+  }
+
+  .circle-1 {
+    width: 250px;
+    height: 250px;
+    top: -125px;
+    right: -125px;
+  }
+
+  .circle-2 {
+    width: 170px;
+    height: 170px;
+    bottom: -85px;
+    left: -85px;
+  }
+
+  .circle-3 {
+    width: 120px;
+    height: 120px;
+    top: 50%;
+    left: -60px;
+  }
+}
+
+/* Smartphones grandes (até 640px) */
+@media (max-width: 640px) {
+  .login-container {
+    max-width: 100%;
+    padding: 12px;
+  }
+
+  .login-card {
+    padding: 36px 28px;
+    border-radius: 16px;
+  }
+
+  .login-logo {
+    margin-bottom: 20px;
+  }
+
+  .login-logo img {
+    max-width: 130px;
+  }
+
+  .login-title {
+    font-size: 24px;
+    margin-bottom: 6px;
+  }
+
+  .login-subtitle {
+    font-size: 14px;
+  }
+
+  .login-form {
+    margin-bottom: 20px;
+  }
+
+  .form-group {
+    margin-bottom: 18px;
+  }
+
+  .form-label {
+    font-size: 13px;
+    gap: 6px;
+    margin-bottom: 7px;
+  }
+
+  .form-input {
+    padding: 12px 14px;
+    font-size: 14px;
+    border-radius: 10px;
+  }
+
+  .btn-login {
+    padding: 14px;
+    font-size: 15px;
+    border-radius: 10px;
+  }
+
+  .error-message {
+    padding: 10px 13px;
+    font-size: 13px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+  }
+
+  .login-footer {
+    padding-top: 20px;
+  }
+
+  .login-footer p {
+    font-size: 11px;
+  }
+
+  .loader {
+    width: 18px;
+    height: 18px;
+    border-width: 2.5px;
+  }
+
+  .circle-1 {
+    width: 200px;
+    height: 200px;
+    top: -100px;
+    right: -100px;
+  }
+
+  .circle-2 {
+    width: 140px;
+    height: 140px;
+    bottom: -70px;
+    left: -70px;
+  }
+
+  .circle-3 {
+    width: 100px;
+    height: 100px;
+    top: 50%;
+    left: -50px;
+  }
+}
+
+/* Smartphones médios (até 480px) */
+@media (max-width: 480px) {
+  body {
+    padding: 0;
+  }
+
+  .login-container {
+    padding: 10px;
+  }
+
+  .login-card {
+    padding: 32px 24px;
+    border-radius: 14px;
+    box-shadow: 0 8px 12px -2px rgba(0, 0, 0, 0.1), 0 3px 5px -2px rgba(0, 0, 0, 0.05);
+  }
+
+  .login-logo {
+    margin-bottom: 18px;
+  }
+
+  .login-logo img {
+    max-width: 120px;
+  }
+
+  .logo-symbol {
+    width: 60px;
+    height: 60px;
+  }
+
+  .logo-symbol-text {
+    font-size: 36px;
+  }
+
+  .login-title {
+    font-size: 22px;
+    margin-bottom: 5px;
+  }
+
+  .login-subtitle {
+    font-size: 13px;
+  }
+
+  .login-form {
+    margin-bottom: 18px;
+  }
+
+  .form-group {
+    margin-bottom: 16px;
+  }
+
+  .form-label {
+    font-size: 12px;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+
+  .input-icon {
+    width: 15px;
+    height: 15px;
+  }
+
+  .form-input {
+    padding: 11px 13px;
+    font-size: 14px;
+    border-radius: 10px;
+    border-width: 1.5px;
+  }
+
+  .btn-login {
+    padding: 13px;
+    font-size: 14px;
+    border-radius: 10px;
+    gap: 6px;
+  }
+
+  .error-message {
+    padding: 9px 12px;
+    font-size: 12px;
+    border-radius: 8px;
+    margin-bottom: 14px;
+  }
+
+  .login-footer {
+    padding-top: 18px;
+  }
+
+  .login-footer p {
+    font-size: 10px;
+  }
+
+  .loader {
+    width: 16px;
+    height: 16px;
+    border-width: 2px;
+  }
+
+  /* Reduzir círculos decorativos em telas pequenas */
+  .circle-1 {
+    width: 150px;
+    height: 150px;
+    top: -75px;
+    right: -75px;
+  }
+
+  .circle-2 {
+    width: 100px;
+    height: 100px;
+    bottom: -50px;
+    left: -50px;
+  }
+
+  .circle-3 {
+    width: 80px;
+    height: 80px;
+    top: 50%;
+    left: -40px;
+  }
+}
+
+/* Smartphones pequenos (até 375px) */
+@media (max-width: 375px) {
+  .login-card {
+    padding: 28px 20px;
+    border-radius: 12px;
+  }
+
+  .login-logo img {
+    max-width: 110px;
+  }
+
+  .logo-symbol {
+    width: 55px;
+    height: 55px;
+  }
+
+  .logo-symbol-text {
+    font-size: 32px;
+  }
+
+  .login-title {
+    font-size: 20px;
+  }
+
+  .login-subtitle {
+    font-size: 12px;
+  }
+
+  .form-group {
+    margin-bottom: 14px;
+  }
+
+  .form-label {
+    font-size: 11px;
+  }
+
+  .input-icon {
+    width: 14px;
+    height: 14px;
+  }
+
+  .form-input {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .btn-login {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .error-message {
+    padding: 8px 11px;
+    font-size: 11px;
+  }
+
+  .login-footer {
+    padding-top: 16px;
+  }
+
+  .login-footer p {
+    font-size: 10px;
+  }
+
+  /* Ocultar ou minimizar ainda mais os círculos em telas muito pequenas */
+  .circle {
+    opacity: 0.5;
+  }
+}
+
+/* Smartphones muito pequenos (até 320px) */
+@media (max-width: 320px) {
+  .login-container {
+    padding: 8px;
+  }
+
+  .login-card {
+    padding: 24px 16px;
+    border-radius: 10px;
+  }
+
+  .login-logo {
+    margin-bottom: 14px;
+  }
+
+  .login-logo img {
+    max-width: 100px;
+  }
+
+  .logo-symbol {
+    width: 50px;
+    height: 50px;
+  }
+
+  .logo-symbol-text {
+    font-size: 28px;
+  }
+
+  .login-title {
+    font-size: 18px;
+  }
+
+  .login-subtitle {
+    font-size: 11px;
+  }
+
+  .login-form {
+    margin-bottom: 16px;
+  }
+
+  .form-group {
+    margin-bottom: 12px;
+  }
+
+  .form-label {
+    font-size: 11px;
+    gap: 5px;
+    margin-bottom: 5px;
+  }
+
+  .input-icon {
+    width: 13px;
+    height: 13px;
+  }
+
+  .form-input {
+    padding: 9px 11px;
+    font-size: 13px;
+    border-radius: 8px;
+  }
+
+  .btn-login {
+    padding: 11px;
+    font-size: 13px;
+    border-radius: 8px;
+  }
+
+  .error-message {
+    padding: 7px 10px;
+    font-size: 11px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+  }
+
+  .login-footer {
+    padding-top: 14px;
+  }
+
+  .login-footer p {
+    font-size: 9px;
+  }
+
+  .loader {
+    width: 14px;
+    height: 14px;
+    border-width: 2px;
+  }
+
+  /* Ocultar círculos decorativos em telas muito pequenas */
+  .background-decoration {
+    display: none;
+  }
+}
+
+/* Landscape orientation em smartphones */
+@media (max-height: 600px) and (orientation: landscape) {
+  body {
+    align-items: flex-start;
+    padding: 20px 0;
+  }
+
+  .login-card {
+    padding: 24px 32px;
+    margin: 20px 0;
+  }
+
+  .login-logo {
+    margin-bottom: 16px;
+  }
+
+  .login-logo img {
+    max-width: 100px;
+  }
+
+  .login-title {
+    font-size: 20px;
+  }
+
+  .login-subtitle {
+    font-size: 12px;
+  }
+
+  .login-form {
+    margin-bottom: 16px;
+  }
+
+  .form-group {
+    margin-bottom: 14px;
+  }
+
+  .form-input {
+    padding: 10px 12px;
+  }
+
+  .btn-login {
+    padding: 11px;
+  }
+
+  .login-footer {
+    padding-top: 16px;
+  }
+
+  /* Reduzir animações em landscape para melhor performance */
+  .circle {
+    animation-duration: 30s;
+  }
+}
+
+/* Ajustes para telas de alta resolução (Retina) */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .login-card {
+    box-shadow: 0 12px 18px -4px rgba(0, 0, 0, 0.12), 0 5px 7px -3px rgba(0, 0, 0, 0.06);
+  }
+
+  .btn-login {
+    box-shadow: 0 5px 14px rgba(0, 0, 0, 0.18);
+  }
+
+  .form-input {
+    border-width: 1.5px;
+  }
+}
+
+/* Modo escuro do sistema (opcional) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #1a1a1a;
+    --card-background: #2d2d2d;
+    --text-primary: #f9fafb;
+    --text-secondary: #d1d5db;
+    --border-color: #4b5563;
+  }
+
+  .form-input {
+    background: #1f2937;
+    color: #f9fafb;
+  }
+
+  .form-input:focus {
+    background: #374151;
+  }
+
+  .circle {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.05));
+  }
+}
+
+/* Ajustes para acessibilidade - Reduzir movimento */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .circle {
+    animation: none;
+  }
+}
+
+/* Ajustes para impressão */
+@media print {
+  .background-decoration {
+    display: none;
+  }
+
+  .login-card {
+    box-shadow: none;
+    border: 1px solid #e5e7eb;
+  }
+
+  .btn-login {
+    box-shadow: none;
+  }
+}
