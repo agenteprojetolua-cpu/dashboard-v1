@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard de Saúde Emocional - Lua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="app">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-symbol" id="logoContainer">
+          <img src="../imagem/Design sem nome (9).png" alt="Logo da Empresa" />
+        </div>
+        <div class="logo-text">
+          <span class="logo-title">Lua Saúde Emocional</span>
+          <span class="logo-subtitle">Dashboard do Colaborador</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item active" data-page="overview">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+          </span>
+          Overview
+        </a>
+        <a href="#" class="nav-item" data-page="bem-estar">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+          </span>
+          Bem-estar
+        </a>
+        <a href="#" class="nav-item" data-page="estresse">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+          </span>
+          Estresse
+        </a>
+        <a href="#" class="nav-item" data-page="burnout">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2c2 2 3 5 3 8 0 3-1 6-3 8-2-2-3-5-3-8 0-3 1-6 3-8z"></path>
+              <path d="M12 18v4"></path>
+            </svg>
+          </span>
+          Burnout
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <p class="sidebar-user">Logado como:</p>
+        <p class="sidebar-user-name">Colaborador Exemplo</p>
+        <button class="sidebar-logout">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+          </span>
+          Sair
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+      <!-- HEADER COM MENU HAMBÚRGUER -->
+      <div class="mobile-header">
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <div class="mobile-header-logo">
+          <img src="../imagem/Design sem nome (9).png" alt="Logo Lua" />
+          <span>Lua Saúde Emocional</span>
+        </div>
+      </div>
+
+      <!-- PÁGINA: OVERVIEW -->
+      <section id="page-overview" class="page-content active">
+        <header class="main-header">
+          <div>
+            <h1 class="page-title">Overview</h1>
+            <p class="page-subtitle">Visão geral dos indicadores de saúde emocional</p>
+          </div>
+          <div class="header-actions">
+            <select id="rangeSelectOverview" class="select">
+              <option value="7">Últimos 7 dias</option>
+              <option value="30">Últimos 30 dias</option>
+              <option value="90">Últimos 90 dias</option>
+            </select>
+            <button class="btn btn-refresh">
+              <span class="btn-icon">🔄</span> Atualizar
+            </button>
+          </div>
+        </header>
+
+        <!-- INDICADORES PRINCIPAIS - Linha 1 -->
+        <section class="kpi-grid">
+          <div class="card kpi">
+            <div class="card-header">
+              <h3>Bem-estar Geral</h3>
+            </div>
+            <div class="card-body kpi-body">
+              <div>
+                <div id="kpiWellbeing" class="kpi-value">0%</div>
+                <p class="kpi-label">Nível geral de bem-estar</p>
+              </div>
+              <span id="kpiWellbeingTrend" class="kpi-trend kpi-trend-up">▲</span>
+            </div>
+          </div>
+
+          <div class="card kpi">
+            <div class="card-header">
+              <h3>Estresse por Setor</h3>
+            </div>
+            <div class="card-body kpi-body">
+              <div>
+                <div id="kpiStress" class="kpi-value">0/10</div>
+                <p class="kpi-label">Nível médio de estresse</p>
+              </div>
+              <span class="kpi-trend kpi-trend-mid">●</span>
+            </div>
+          </div>
+
+          <div class="card kpi">
+            <div class="card-header">
+              <h3>Índice de Burnout</h3>
+            </div>
+            <div class="card-body kpi-body">
+              <div>
+                <div id="kpiBurnout" class="kpi-value">Baixo</div>
+                <p class="kpi-label">Nível predominante</p>
+              </div>
+              <span class="kpi-trend kpi-trend-mid">●</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- INDICADORES PRINCIPAIS - Linha 2 -->
+        <section class="kpi-grid">
+          <div class="card kpi">
+            <div class="card-header">
+              <h3>Total de Interações</h3>
+            </div>
+            <div class="card-body kpi-body">
+              <div>
+                <div id="kpiTotalInteracoes" class="kpi-value">0</div>
+                <p class="kpi-label">Interações anônimas</p>
+              </div>
+              <span class="kpi-trend kpi-trend-info">📊</span>
+            </div>
+          </div>
+
+          <div class="card kpi">
+            <div class="card-header">
+              <h3>Alertas Críticos</h3>
+            </div>
+            <div class="card-body kpi-body">
+              <div>
+                <div id="kpiAlertasCriticos" class="kpi-value kpi-danger">0</div>
+                <p class="kpi-label">Alertas acionados</p>
+              </div>
+              <span class="kpi-trend kpi-trend-info">🚨</span>
+            </div>
+          </div>
+
+          <div class="card kpi">
+            <div class="card-header">
+              <h3>Sentimento - Trabalho</h3>
+            </div>
+            <div class="card-body kpi-body">
+              <div>
+                <div id="kpiSentimentoTrabalho" class="kpi-value">0%</div>
+                <p class="kpi-label">Satisfação com trabalho</p>
+              </div>
+              <span class="kpi-trend kpi-trend-mid">😊</span>
+            </div>
+          </div>
+
+          <div class="card kpi">
+            <div class="card-header">
+              <h3>Sentimento - Empresa</h3>
+            </div>
+            <div class="card-body kpi-body">
+              <div>
+                <div id="kpiSentimentoEmpresa" class="kpi-value">0%</div>
+                <p class="kpi-label">Satisfação com empresa</p>
+              </div>
+              <span class="kpi-trend kpi-trend-mid">🏢</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- INDICADORES PRINCIPAIS - Linha 3 (apenas 1 card) -->
+        <section class="kpi-grid-single">
+          <div class="card kpi">
+            <div class="card-header">
+              <h3>Sentimento - Gestor</h3>
+            </div>
+            <div class="card-body kpi-body">
+              <div>
+                <div id="kpiSentimentoGestor" class="kpi-value">0%</div>
+                <p class="kpi-label">Satisfação com gestor</p>
+              </div>
+              <span class="kpi-trend kpi-trend-mid">👤</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- GRÁFICOS PRINCIPAIS -->
+        <section class="grid-2">
+          <div class="card">
+            <div class="card-header">
+              <h3>Comparação Entre Setores</h3>
+            </div>
+            <div class="card-body">
+              <canvas id="chartSetoresComparacao"></canvas>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3>Distribuição de Burnout</h3>
+            </div>
+            <div class="card-body">
+              <canvas id="chartOverviewBurnout"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <!-- SENTIMENTOS E TEMAS -->
+        <section class="grid-2">
+          <div class="card">
+            <div class="card-header">
+              <h3>Top 5 Sentimentos Predominantes</h3>
+            </div>
+            <div class="card-body">
+              <canvas id="chartSentimentos"></canvas>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3>Top 5 Temas Mais Citados</h3>
+            </div>
+            <div class="card-body">
+              <canvas id="chartTemas"></canvas>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- PÁGINA: BEM-ESTAR -->
+      <section id="page-bem-estar" class="page-content">
+        <header class="main-header">
+          <div>
+            <h1 class="page-title">Análise de Bem-estar</h1>
+            <p class="page-subtitle">Indicadores de saúde emocional e qualidade de vida</p>
+          </div>
+          <div class="header-actions">
+            <select id="rangeSelectBemEstar" class="select">
+              <option value="7">Últimos 7 dias</option>
+              <option value="30" selected>Últimos 30 dias</option>
+              <option value="90">Últimos 90 dias</option>
+            </select>
+            <button class="btn btn-refresh">
+              <span class="btn-icon">🔄</span> Atualizar
+            </button>
+          </div>
+        </header>
+
+        <!-- KPIs BEM-ESTAR -->
+        <section class="kpi-grid">
+          <div class="card kpi">
+            <div class="card-header">
+              <h3>Bem-estar Médio</h3>
+            </div>
+            <div class="card-body kpi-body">
+              <div>
+                <div id="kpiBemEstarMedio" class="kpi-value">0%</div>
+                <p class="kpi-label">Média geral</p>
+              </div>
+              <span class="kpi-icon">❤️</span>
+            </div>
+          </div>
+
+          <div class="card kpi">
+            <div class="card-header">
+              <h3>Variação</h3>
+            </div>
+            <div class="card-body kpi-body">
+              <div>
+                <div id="kpiBemEstarVariacao" class="kpi-value">0%</div>
+                <p class="kpi-label">vs. período anterior</p>
+              </div>
+              <span class="kpi-trend kpi-trend-up">▲</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- GRÁFICOS BEM-ESTAR -->
+        <section class="card">
+          <div class="card-header">
+            <h3>Comparação por Setor</h3>
+          </div>
+          <div class="card-body">
+            <canvas id="chartBemEstarSetores"></canvas>
+          </div>
+        </section>
+
+        <!-- DISTRIBUIÇÃO -->
+        <section class="card">
+          <div class="card-header">
+            <h3>Distribuição de Níveis de Bem-estar</h3>
+          </div>
+          <div class="card-body">
+            <canvas id="chartBemEstarDistribuicao"></canvas>
+          </div>
+        </section>
+
+        <!-- INSIGHTS -->
+        <section class="card">
+          <div class="card-header">
+            <h3>💡 Insights e Recomendações</h3>
+          </div>
+          <div class="card-body">
+            <div id="insightsBemEstar" class="insights-container"></div>
+          </div>
+        </section>
+      </section>
+
+      <!-- PÁGINA: ESTRESSE -->
+      <section id="page-estresse" class="page-content">
+        <header class="main-header">
+          <div>
+            <h1 class="page-title">Análise de Estresse</h1>
+            <p class="page-subtitle">Monitoramento de níveis de estresse e sobrecarga</p>
+          </div>
+          <div class="header-actions">
+            <select id="rangeSelectEstresse" class="select">
+              <option value="7">Últimos 7 dias</option>
+              <option value="30" selected>Últimos 30 dias</option>
+              <option value="90">Últimos 90 dias</option>
+            </select>
+            <button class="btn btn-refresh">
+              <span class="btn-icon">🔄</span> Atualizar
+            </button>
+          </div>
+        </header>
+
+        <!-- KPIs ESTRESSE -->
+        <section class="kpi-grid">
+          <div class="card kpi">
+            <div class="card-header">
+              <h3>Estresse Médio</h3>
+            </div>
+            <div class="card-body kpi-body">
+              <div>
+                <div id="kpiEstresseMedio" class="kpi-value">0/10</div>
+                <p class="kpi-label">Nível médio</p>
+              </div>
+              <span class="kpi-icon">⚡</span>
+            </div>
+          </div>
+
+          <div class="card kpi">
+            <div class="card-header">
+              <h3>Sobrecarga Média</h3>
+            </div>
+            <div class="card-body kpi-body">
+              <div>
+                <div id="kpiSobrecargaMedia" class="kpi-value">0/10</div>
+                <p class="kpi-label">Percepção de sobrecarga</p>
+              </div>
+              <span class="kpi-icon">📊</span>
+            </div>
+          </div>
+
+          <div class="card kpi">
+            <div class="card-header">
+              <h3>Alto Estresse</h3>
+            </div>
+            <div class="card-body kpi-body">
+              <div>
+                <div id="kpiEstresseAlto" class="kpi-value">0%</div>
+                <p class="kpi-label">Colaboradores (>7/10)</p>
+              </div>
+              <span class="kpi-icon kpi-danger">⚠️</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- GRÁFICOS ESTRESSE -->
+        <section class="card">
+          <div class="card-header">
+            <h3>Estresse por Setor</h3>
+          </div>
+          <div class="card-body">
+            <canvas id="chartEstresseSetores"></canvas>
+          </div>
+        </section>
+
+        <!-- DISTRIBUIÇÃO -->
+        <section class="card">
+          <div class="card-header">
+            <h3>Distribuição de Níveis de Estresse</h3>
+          </div>
+          <div class="card-body">
+            <canvas id="chartEstresseDistribuicao"></canvas>
+          </div>
+        </section>
+
+        <!-- INSIGHTS -->
+        <section class="card">
+          <div class="card-header">
+            <h3>💡 Insights e Recomendações</h3>
+          </div>
+          <div class="card-body">
+            <div id="insightsEstresse" class="insights-container"></div>
+          </div>
+        </section>
+      </section>
+
+      <!-- PÁGINA: BURNOUT -->
+      <section id="page-burnout" class="page-content">
+        <header class="main-header">
+          <div>
+            <h1 class="page-title">Análise de Burnout</h1>
+            <p class="page-subtitle">Identificação de sinais de esgotamento profissional</p>
+          </div>
+          <div class="header-actions">
+            <select id="rangeSelectBurnout" class="select">
+              <option value="7">Últimos 7 dias</option>
+              <option value="30" selected>Últimos 30 dias</option>
+              <option value="90">Últimos 90 dias</option>
+            </select>
+            <button class="btn btn-refresh">
+              <span class="btn-icon">🔄</span> Atualizar
+            </button>
+          </div>
+        </header>
+
+        <!-- KPIs BURNOUT -->
+        <section class="kpi-grid">
+          <div class="card kpi">
+            <div class="card-header">
+              <h3>Risco Baixo</h3>
+            </div>
+            <div class="card-body kpi-body">
+              <div>
+                <div id="kpiBurnoutBaixo" class="kpi-value kpi-success">0%</div>
+                <p class="kpi-label">Colaboradores</p>
+              </div>
+              <span class="kpi-icon">✅</span>
+            </div>
+          </div>
+
+          <div class="card kpi">
+            <div class="card-header">
+              <h3>Risco Médio</h3>
+            </div>
+            <div class="card-body kpi-body">
+              <div>
+                <div id="kpiBurnoutMedio" class="kpi-value kpi-warning">0%</div>
+                <p class="kpi-label">Colaboradores</p>
+              </div>
+              <span class="kpi-icon">⚠️</span>
+            </div>
+          </div>
+
+          <div class="card kpi">
+            <div class="card-header">
+              <h3>Risco Alto</h3>
+            </div>
+            <div class="card-body kpi-body">
+              <div>
+                <div id="kpiBurnoutAlto" class="kpi-value kpi-danger">0%</div>
+                <p class="kpi-label">Colaboradores</p>
+              </div>
+              <span class="kpi-icon">🚨</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- GRÁFICOS BURNOUT -->
+        <section class="card">
+          <div class="card-header">
+            <h3>Burnout por Setor</h3>
+          </div>
+          <div class="card-body">
+            <canvas id="chartBurnoutSetores"></canvas>
+          </div>
+        </section>
+
+        <!-- INSIGHTS -->
+        <section class="card">
+          <div class="card-header">
+            <h3>💡 Insights e Recomendações</h3>
+          </div>
+          <div class="card-body">
+            <div id="insightsBurnout" class="insights-container"></div>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <!-- Overlay para fechar o menu em mobile -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <script src="../auth.js"></script>
+  <script src="../script.js"></script>
+  <script src="../menu.js"></script>
+</body>
+</html>
